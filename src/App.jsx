@@ -9,9 +9,7 @@ export default function App() {
 
   return (
     <>
-      <div className='m-8 border border-width: 1px'>
-        <Header />
-        <hr className='mx-3' />
+      <div className=''>
         <WetherCard />
       </div>
       
