@@ -158,7 +158,7 @@ const Weather = ({ city }) => {
   const rainyCodes = [4000, 4200];
   const isRainy = rainyCodes.includes(currentData?.weatherCode);
 
-  const SnowCodes = [2000,5000,5100,1000,1100,1102];
+  const SnowCodes = [2000,5000,5100];
   const isSnowing = SnowCodes.includes(currentData?.weatherCode);
 
   const lastSearchedCity = useRef('');
