@@ -1,14 +1,17 @@
-import { useState } from 'react'
-import './App.css'
-import Navbar from './Components/Navbar'
-function App() {
-  const [count, setCount] = useState(0)
+
+import Home from "./Pages/Home";
+import RainScene from "./components/3D/Render/RainRenderer";
+import SnowRender from "./components/3D/Render/SnowRenderer";
+const App = () => {
+  
 
   return (
-    <>
-    <Navbar/>
- </>
-  )
-}
+  <>
+  <Home />
+  {/* <SnowRender/> */}
+  {/* <RainScene/> */}
+  </>
+  );
+};
 
-export default App
+export default App;
