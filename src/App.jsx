@@ -1,19 +1,17 @@
-import { useState } from 'react'
-import Header from './component/Header'
-import WetherCard from './component/wetherCard'
 
-
-
-export default function App() {
-  const [count, setCount] = useState(0)
+import Home from "./Pages/Home";
+import RainScene from "./components/3D/Render/RainRenderer";
+import SnowRender from "./components/3D/Render/SnowRenderer";
+const App = () => {
+  
 
   return (
-    <>
-      <div className=''>
-        <WetherCard />
-      </div>
-      
-    </>
-  )
-}
+  <>
+  <Home />
+  {/* <SnowRender/> */}
+  {/* <RainScene/> */}
+  </>
+  );
+};
 
+export default App;
