@@ -33,6 +33,7 @@ const Weather = ({ city }) => {
   const weeklyForecastRef = useRef();
   const searchTimeout = useRef(null);
 
+const [cityname, setCityName] = useState();
   const { searchQuery, setSearchQuery } = useSearchLocation();
   const location = useLocation();
   const [darkMode, setDarkMode] = useState(false);
@@ -158,7 +159,7 @@ const Weather = ({ city }) => {
   const rainyCodes = [4000, 4200];
   const isRainy = rainyCodes.includes(currentData?.weatherCode);
 
-  const SnowCodes = [2000,5000,5100];
+  const SnowCodes = [2000,5000,5100,1000,1100];
   const isSnowing = SnowCodes.includes(currentData?.weatherCode);
 
   const lastSearchedCity = useRef('');
@@ -251,6 +252,11 @@ const Weather = ({ city }) => {
       setDarkMode(!darkMode);
     }
   }, [isSnowing])
+  useEffect(() => {
+    if (location?.city) {
+      setCityName(location.city);
+    }
+  }, [location])
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -297,7 +303,9 @@ const Weather = ({ city }) => {
             <div ref={currentWeatherRef} className="bg-white/20 backdrop-blur-md rounded-3xl p-8 shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
               <div className="flex flex-col md:flex-row items-center justify-between">
                 <div className="text-center md:text-left mb-6 md:mb-0">
-                  <p className="text-xl opacity-80">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+                <p className="text-3xl opacity-80">📍
+                {cityname}</p>
+                  <p className="text-xl ml-4 opacity-80">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric',year: 'numeric' })}</p>
                 </div>
                 <div className="flex items-center">
                   <img src={currentData.icon} alt="Current" className="weather-icon w-24 h-24 mr-4" />
