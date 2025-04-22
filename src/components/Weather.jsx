@@ -33,7 +33,7 @@ const Weather = ({ city }) => {
   const weeklyForecastRef = useRef();
   const searchTimeout = useRef(null);
 
-const [cityname, setCityName] = useState();
+  const [cityname, setCityName] = useState();
   const { searchQuery, setSearchQuery } = useSearchLocation();
   const location = useLocation();
   const [darkMode, setDarkMode] = useState(false);
@@ -48,9 +48,9 @@ const [cityname, setCityName] = useState();
   const handleSearchInputChange = (e) => {
     const value = e.target.value;
     setSearchQuery(value);
-  
+
     clearTimeout(searchTimeout.current)
-  
+
     searchTimeout.current = setTimeout(() => {
       if (value) {
         search(value)
@@ -61,7 +61,7 @@ const [cityname, setCityName] = useState();
   useEffect(() => {
     if (city) search(city);
   }, [city]);
-  
+
   useEffect(() => {
     if (!currentData) return;
 
@@ -159,17 +159,19 @@ const [cityname, setCityName] = useState();
   const rainyCodes = [4000, 4200];
   const isRainy = rainyCodes.includes(currentData?.weatherCode);
 
-  const SnowCodes = [2000,5000,5100];
+  const SnowCodes = [2000, 5000, 5100,8000];
   const isSnowing = SnowCodes.includes(currentData?.weatherCode);
 
   const lastSearchedCity = useRef('');
- 
-    
+
+
   const search = async (city) => {
     if (!city || city.trim() === '') return alert('Kripya Uchit City Name Bharein');
-    if (city === lastSearchedCity.current) 
+    if (city === lastSearchedCity.current)
       return;
     lastSearchedCity.current = city;
+    lastSearchedCity.current = city;
+    setCityName(city);
 
     try {
       const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
@@ -240,12 +242,12 @@ const [cityname, setCityName] = useState();
       setHourlyForecast([]);
     }
   };
-  useEffect(()=>{
-    if(location?.city){
+  useEffect(() => {
+    if (location?.city) {
       search(location.city)
 
     }
-  },[location])
+  }, [location])
 
   useEffect(() => {
     if (isSnowing) {
@@ -256,7 +258,7 @@ const [cityname, setCityName] = useState();
     if (location?.city) {
       setCityName(location.city);
     }
-  }, [location])
+  }, [location?.city])
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -298,14 +300,14 @@ const [cityname, setCityName] = useState();
 
         {currentData ? (
           <div className="space-y-8">
-             {isRainy && (<RainScene />)}
-             {isSnowing && (<SnowRender/>) }
+            {isRainy && (<RainScene />)}
+            {isSnowing && (<SnowRender />)}
             <div ref={currentWeatherRef} className="bg-white/20 backdrop-blur-md rounded-3xl p-8 shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
               <div className="flex flex-col md:flex-row items-center justify-between">
                 <div className="text-center md:text-left mb-6 md:mb-0">
-                <p className="text-3xl opacity-80">📍
-                {cityname}</p>
-                  <p className="text-xl ml-4 opacity-80">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric',year: 'numeric' })}</p>
+                  <p className="text-3xl opacity-80">📍
+                    {cityname}</p>
+                  <p className="text-xl ml-4 opacity-80">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>
                 </div>
                 <div className="flex items-center">
                   <img src={currentData.icon} alt="Current" className="weather-icon w-24 h-24 mr-4" />
