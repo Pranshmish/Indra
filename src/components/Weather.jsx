@@ -65,23 +65,34 @@ const Weather = ({ city }) => {
   useEffect(() => {
     if (!currentData) return;
 
-    gsap.fromTo(currentWeatherRef.current, { y: 50, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 1, ease: 'power3.out',
-      scrollTrigger: {
-        trigger: currentWeatherRef.current,
-        start: 'top center', end: 'bottom center', scrub: 1
-      }
-    });
+    // Clear any existing ScrollTrigger instances
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
-    gsap.fromTo('.weather-data > div', { y: 50, opacity: 0, scale: 0.8 }, {
-      y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)',
-      scrollTrigger: {
-        trigger: weatherDetailsRef.current,
-        start: 'top center+=100', toggleActions: 'play none none reverse'
-      }
-    });
+    // Only create animations for elements that exist
+    if (currentWeatherRef.current) {
+      gsap.fromTo(currentWeatherRef.current, { y: 50, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 1, ease: 'power3.out',
+        scrollTrigger: {
+          trigger: currentWeatherRef.current,
+          start: 'top center', end: 'bottom center', scrub: 1
+        }
+      });
+    }
 
-    if (hourlyScrollerRef.current) {
+    // Check if weather data elements exist before animating
+    const weatherDataElements = document.querySelectorAll('.weather-data > div');
+    if (weatherDataElements.length > 0 && weatherDetailsRef.current) {
+      gsap.fromTo(weatherDataElements, { y: 50, opacity: 0, scale: 0.8 }, {
+        y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)',
+        scrollTrigger: {
+          trigger: weatherDetailsRef.current,
+          start: 'top center+=100', toggleActions: 'play none none reverse'
+        }
+      });
+    }
+
+    // Only animate if hourly scroller exists
+    if (hourlyScrollerRef.current && hourlyForecastRef.current) {
       gsap.to(hourlyScrollerRef.current, {
         x: () => -(hourlyScrollerRef.current.scrollWidth - hourlyScrollerRef.current.offsetWidth),
         ease: 'none',
@@ -91,34 +102,45 @@ const Weather = ({ city }) => {
         }
       });
 
-      gsap.fromTo('.hourly-card', { y: 50, opacity: 0, scale: 0.8 }, {
-        y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)',
+      const hourlyCards = document.querySelectorAll('.hourly-card');
+      if (hourlyCards.length > 0) {
+        gsap.fromTo(hourlyCards, { y: 50, opacity: 0, scale: 0.8 }, {
+          y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)',
+          scrollTrigger: {
+            trigger: hourlyForecastRef.current,
+            start: 'top center+=100', toggleActions: 'play none none reverse'
+          }
+        });
+      }
+    }
+
+    const weeklyCards = document.querySelectorAll('.weekly-card');
+    if (weeklyCards.length > 0 && weeklyForecastRef.current) {
+      gsap.fromTo(weeklyCards, { y: 30, opacity: 0, scale: 0.9 }, {
+        y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'power2.out',
         scrollTrigger: {
-          trigger: hourlyForecastRef.current,
+          trigger: weeklyForecastRef.current,
           start: 'top center+=100', toggleActions: 'play none none reverse'
         }
       });
     }
 
-    gsap.fromTo('.weekly-card', { y: 30, opacity: 0, scale: 0.9 }, {
-      y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: 'power2.out',
-      scrollTrigger: {
-        trigger: weeklyForecastRef.current,
-        start: 'top center+=100', toggleActions: 'play none none reverse'
-      }
-    });
+    const temperatureDisplay = document.querySelector('.temperature-display');
+    if (temperatureDisplay) {
+      gsap.fromTo(temperatureDisplay, { scale: 0.5, opacity: 0 }, {
+        scale: 1, opacity: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)'
+      });
+    }
 
-    gsap.fromTo('.temperature-display', { scale: 0.5, opacity: 0 }, {
-      scale: 1, opacity: 1, duration: 0.8, ease: 'elastic.out(1, 0.5)'
-    });
+    // Remove the non-existent .location-name animation
+    // This was causing the error
 
-    gsap.fromTo('.location-name', { x: -50, opacity: 0 }, {
-      x: 0, opacity: 1, duration: 0.6, ease: 'power2.out'
-    });
-
-    gsap.fromTo('.weather-icon', { rotation: 360, scale: 0 }, {
-      rotation: 0, scale: 1, duration: 1, ease: 'back.out(1.7)'
-    });
+    const weatherIcon = document.querySelector('.weather-icon');
+    if (weatherIcon) {
+      gsap.fromTo(weatherIcon, { rotation: 360, scale: 0 }, {
+        rotation: 0, scale: 1, duration: 1, ease: 'back.out(1.7)'
+      });
+    }
 
     return () => ScrollTrigger.getAll().forEach(trigger => trigger.kill());
   }, [currentData]);
@@ -164,14 +186,67 @@ const Weather = ({ city }) => {
 
   const lastSearchedCity = useRef('');
 
+  // Function to check if cache is valid (less than 30 minutes old)
+  const isCacheValid = (timestamp) => {
+    const thirtyMinutesInMs = 30 * 60 * 1000;
+    return Date.now() - timestamp < thirtyMinutesInMs;
+  };
+
+  // Function to get cached weather data for a city
+  const getCachedWeatherData = (city) => {
+    try {
+      const cacheKey = `weather_${city.toLowerCase().trim()}`;
+      const cachedData = localStorage.getItem(cacheKey);
+      
+      if (!cachedData) return null;
+      
+      const { data, timestamp } = JSON.parse(cachedData);
+      
+      if (isCacheValid(timestamp)) {
+        return data;
+      } else {
+        // Remove expired cache
+        localStorage.removeItem(cacheKey);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error reading from cache:', error);
+      return null;
+    }
+  };
+
+  // Function to cache weather data
+  const cacheWeatherData = (city, data) => {
+    try {
+      const cacheKey = `weather_${city.toLowerCase().trim()}`;
+      const cacheData = {
+        data,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+    } catch (error) {
+      console.error('Error writing to cache:', error);
+    }
+  };
 
   const search = async (city) => {
     if (!city || city.trim() === '') return alert('Kripya Uchit City Name Bharein');
     if (city === lastSearchedCity.current)
       return;
     lastSearchedCity.current = city;
-    lastSearchedCity.current = city;
     setCityName(city);
+
+    // Check cache first
+    const cachedWeatherData = getCachedWeatherData(city);
+    if (cachedWeatherData) {
+      // Use cached data
+      const { currentData: cachedCurrentData, hourlyForecast: cachedHourlyForecast, forecastData: cachedForecastData } = cachedWeatherData;
+      
+      setCurrentData(cachedCurrentData);
+      setHourlyForecast(cachedHourlyForecast);
+      setForecastData(cachedForecastData);
+      return;
+    }
 
     try {
       const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
@@ -216,7 +291,7 @@ const Weather = ({ city }) => {
         };
       });
 
-      setCurrentData({
+      const currentWeatherData = {
         temperature: Math.floor(current.temperature),
         temperatureMin: Math.floor(today.temperatureMin),
         temperatureMax: Math.floor(today.temperatureMax),
@@ -229,10 +304,18 @@ const Weather = ({ city }) => {
         icon: currentIcon,
         location: data.location.name,
         weatherCode: current.weatherCode
-      });
+      };
 
+      setCurrentData(currentWeatherData);
       setHourlyForecast(hourlyData);
       setForecastData(dailyData);
+
+      // Cache the weather data
+      cacheWeatherData(city, {
+        currentData: currentWeatherData,
+        hourlyForecast: hourlyData,
+        forecastData: dailyData
+      });
 
     } catch (error) {
       console.error('Error fetching weather:', error);
@@ -242,10 +325,10 @@ const Weather = ({ city }) => {
       setHourlyForecast([]);
     }
   };
+
   useEffect(() => {
     if (location?.city) {
       search(location.city)
-
     }
   }, [location])
 
@@ -254,6 +337,7 @@ const Weather = ({ city }) => {
       setDarkMode(!darkMode);
     }
   }, [isSnowing])
+  
   useEffect(() => {
     if (location?.city) {
       setCityName(location.city);
