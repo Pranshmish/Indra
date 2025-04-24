@@ -65,10 +65,8 @@ const Weather = ({ city }) => {
   useEffect(() => {
     if (!currentData) return;
 
-    // Clear any existing ScrollTrigger instances
     ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
-    // Only create animations for elements that exist
     if (currentWeatherRef.current) {
       gsap.fromTo(currentWeatherRef.current, { y: 50, opacity: 0 }, {
         y: 0, opacity: 1, duration: 1, ease: 'power3.out',
@@ -79,7 +77,6 @@ const Weather = ({ city }) => {
       });
     }
 
-    // Check if weather data elements exist before animating
     const weatherDataElements = document.querySelectorAll('.weather-data > div');
     if (weatherDataElements.length > 0 && weatherDetailsRef.current) {
       gsap.fromTo(weatherDataElements, { y: 50, opacity: 0, scale: 0.8 }, {
@@ -91,7 +88,7 @@ const Weather = ({ city }) => {
       });
     }
 
-    // Only animate if hourly scroller exists
+  
     if (hourlyScrollerRef.current && hourlyForecastRef.current) {
       gsap.to(hourlyScrollerRef.current, {
         x: () => -(hourlyScrollerRef.current.scrollWidth - hourlyScrollerRef.current.offsetWidth),
@@ -186,7 +183,7 @@ const Weather = ({ city }) => {
 
   const lastSearchedCity = useRef('');
 
-  // Function to check if cache is valid (less than 30 minutes old)
+
   const isCacheValid = (timestamp) => {
     const thirtyMinutesInMs = 30 * 60 * 1000;
     return Date.now() - timestamp < thirtyMinutesInMs;
@@ -215,7 +212,6 @@ const Weather = ({ city }) => {
     }
   };
 
-  // Function to cache weather data
   const cacheWeatherData = (city, data) => {
     try {
       const cacheKey = `weather_${city.toLowerCase().trim()}`;
@@ -236,10 +232,10 @@ const Weather = ({ city }) => {
     lastSearchedCity.current = city;
     setCityName(city);
 
-    // Check cache first
+ 
     const cachedWeatherData = getCachedWeatherData(city);
     if (cachedWeatherData) {
-      // Use cached data
+
       const { currentData: cachedCurrentData, hourlyForecast: cachedHourlyForecast, forecastData: cachedForecastData } = cachedWeatherData;
       
       setCurrentData(cachedCurrentData);
@@ -310,7 +306,7 @@ const Weather = ({ city }) => {
       setHourlyForecast(hourlyData);
       setForecastData(dailyData);
 
-      // Cache the weather data
+   
       cacheWeatherData(city, {
         currentData: currentWeatherData,
         hourlyForecast: hourlyData,
