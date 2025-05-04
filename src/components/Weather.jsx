@@ -19,7 +19,7 @@ import Modal from './ModalCard';
 import RainScene from './3D/Render/RainRenderer';
 import { useLocation } from './Location';
 import { useSearchLocation } from './SearchLocation';
-import SnowRender from './3D/Render/SnowRenderer';
+import SnowScene from './3D/Render/SnowRenderer';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -381,7 +381,7 @@ const Weather = ({ city }) => {
         {currentData ? (
           <div className="space-y-8">
             {isRainy && (<RainScene />)}
-            {isSnowing && (<SnowRender />)}
+            {isSnowing && (<SnowScene />)}
             <div ref={currentWeatherRef} className="bg-white/20 backdrop-blur-md rounded-3xl p-8 shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
               <div className="flex flex-col md:flex-row items-center justify-between">
                 <div className="text-center md:text-left mb-6 md:mb-0">
@@ -401,29 +401,28 @@ const Weather = ({ city }) => {
                 </div>
               </div>
             </div>
-
             <div ref={weatherDetailsRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 weather-data">
-              {[
-                { label: "Humidity", value: `${currentData.humidity}%`, icon: humidity },
-                { label: "Wind Speed", value: `${currentData.windSpeed}km/hr`, icon: wind },
-                { label: "UV Index", value: currentData.uvIndex, icon: uv },
-                { label: "Wind Direc.", value: `${currentData.windDirection}°`, icon: wd },
-                { label: "Pressure", value: `${currentData.pressure} hPa`, icon: ap },
-                { label: "Visibility", value: `${currentData.visibility} km`, icon: vv }
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleDataClick(item.label, item.value, item.icon)}
-                  className="p-4 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 cursor-pointer hover:bg-white/30 transition-all duration-300 shadow-lg transform hover:scale-105"
-                >
-                  <div className="flex items-center mb-2">
-                    <img src={item.icon} alt="" className="w-8 h-8 mr-2" />
-                    <h4 className="font-medium">{item.label}</h4>
-                  </div>
-                  <p className="text-2xl font-bold">{item.value}</p>
-                </div>
-              ))}
-            </div>
+  {[
+    { label: "Humidity", value: `${currentData.humidity}%`, icon: humidity },
+    { label: "Wind Speed", value: `${currentData.windSpeed}km/hr`, icon: wind },
+    { label: "UV Index", value: currentData.uvIndex, icon: uv },
+    { label: "Wind Direc.", value: `${currentData.windDirection}°`, icon: wd },
+    { label: "Pressure", value: `${currentData.pressure} hPa`, icon: ap },
+    { label: "Visibility", value: `${currentData.visibility} km`, icon: vv }
+  ].map((item, index) => (
+    <div
+      key={index}
+      onClick={() => handleDataClick(item.label, item.value, item.icon)}
+      className="p-4 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-white/30 hover:backdrop-blur-lg hover:border-white/40"
+    >
+      <div className="flex items-center mb-2">
+        <img src={item.icon} alt={item.label} className="w-8 h-8 mr-2" />
+        <h4 className="font-medium text-white">{item.label}</h4>
+      </div>
+      <p className="text-2xl font-bold text-white">{item.value}</p>
+    </div>
+  ))}
+</div>
 
             <div ref={hourlyForecastRef} className="bg-white/20 backdrop-blur-md rounded-3xl p-6 shadow-xl overflow-hidden">
               <h3 className="text-2xl font-bold mb-4">Hourly Forecast</h3>

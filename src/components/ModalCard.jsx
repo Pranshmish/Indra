@@ -1,32 +1,27 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
 const Modal = ({ show, onClose, children }) => {
+  const [shouldRender, setShouldRender] = useState(show);
   const modalRef = useRef();
   const overlayRef = useRef();
 
   useEffect(() => {
     if (show) {
+      setShouldRender(true);
+
+      // Enter animation
       gsap.fromTo(overlayRef.current,
         { opacity: 0 },
         { opacity: 1, duration: 0.5, ease: "power2.out" }
       );
 
       gsap.fromTo(modalRef.current,
-        {
-          scale: 0.8,
-          opacity: 0,
-          y: 50
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: "back.out(1.7)"
-        }
+        { scale: 0.8, opacity: 0, y: 50 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.7)" }
       );
-    } else {
+    } else if (shouldRender) {
+      // Exit animation
       gsap.to(overlayRef.current, {
         opacity: 0,
         duration: 0.3,
@@ -39,11 +34,12 @@ const Modal = ({ show, onClose, children }) => {
         y: 50,
         duration: 0.5,
         ease: "back.in(1.7)",
+        onComplete: () => setShouldRender(false),
       });
     }
   }, [show]);
 
-  if (!show) return null;
+  if (!shouldRender) return null;
 
   return (
     <div

@@ -23,7 +23,7 @@ const Snow = () => {
   useFrame(() => {
     const pos = rainRef.current.geometry.attributes.position.array;
     for (let i = 0; i < rainCount; i++) {
-      pos[i * 3 + 1] -= 0.05;
+      pos[i * 3 + 1] -= 0.02;
       if (pos[i * 3 + 1] < 0) {
         pos[i * 3 + 1] = 20;
       }
