@@ -163,23 +163,41 @@ const Weather = ({ city }) => {
   };
 
   const weatherCodeIcons = {
-    1000: sunny,
-    1100: sunny,
-    1101: cloudy,
-    1102: cloudy,
-    2000: snowflake,
-    4000: drizzle,
-    4200: rainy,
-    5000: snowflake,
-    5100: snowflake,
-    8000: storm
-  };
+  0: sunny,            // Clear
+  1: sunny,            // Mainly clear
+  2: cloudy,           // Partly cloudy
+  3: cloudy,           // Overcast
+  45: cloudy,          // Fog
+  48: cloudy,          // Depositing fog
+  51: drizzle,         // Light drizzle
+  53: drizzle,         // Moderate drizzle
+  55: drizzle,         // Dense drizzle
+  56: drizzle,         // Light freezing drizzle
+  57: drizzle,         // Dense freezing drizzle
+  61: rainy,           // Slight rain
+  63: rainy,           // Moderate rain
+  65: rainy,           // Heavy rain
+  66: rainy,           // Light freezing rain
+  67: rainy,           // Heavy freezing rain
+  71: snowflake,       // Slight snowfall
+  73: snowflake,       // Moderate snowfall
+  75: snowflake,       // Heavy snowfall
+  77: snowflake,       // Snow grains
+  80: rainy,           // Rain showers (slight)
+  81: rainy,           // Rain showers (moderate)
+  82: rainy,           // Rain showers (violent)
+  85: snowflake,       // Snow showers (slight)
+  86: snowflake,       // Snow showers (heavy)
+  95: storm,           // Thunderstorm
+  96: storm,           // Thunderstorm + slight hail
+  99: storm            // Thunderstorm + heavy hail
+};
 
-  const rainyCodes = [4000, 4200];
-  const isRainy = rainyCodes.includes(currentData?.weatherCode);
+const rainyCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82];
+const isRainy = rainyCodes.includes(currentData?.weatherCode);
 
-  const SnowCodes = [2000, 5000, 5100,8000];
-  const isSnowing = SnowCodes.includes(currentData?.weatherCode);
+const snowCodes = [71, 73, 75, 77, 85, 86];
+const isSnowing = snowCodes.includes(currentData?.weatherCode);
 
   const lastSearchedCity = useRef('');
 
@@ -225,102 +243,96 @@ const Weather = ({ city }) => {
     }
   };
 
-  const search = async (city) => {
-    if (!city || city.trim() === '') return alert('Kripya Uchit City Name Bharein');
-    if (city === lastSearchedCity.current)
-      return;
-    lastSearchedCity.current = city;
-    setCityName(city);
+const search = async (city) => {
+  if (!city || city.trim() === '') return alert('Kripya Uchit City Name Bharein');
+  if (city === lastSearchedCity.current) return;
+  lastSearchedCity.current = city;
+  setCityName(city);
 
- 
-    const cachedWeatherData = getCachedWeatherData(city);
-    if (cachedWeatherData) {
+  const cachedWeatherData = getCachedWeatherData(city);
+  if (cachedWeatherData) {
+    const { currentData: cachedCurrentData, hourlyForecast: cachedHourlyForecast, forecastData: cachedForecastData } = cachedWeatherData;
+    setCurrentData(cachedCurrentData);
+    setHourlyForecast(cachedHourlyForecast);
+    setForecastData(cachedForecastData);
+    return;
+  }
 
-      const { currentData: cachedCurrentData, hourlyForecast: cachedHourlyForecast, forecastData: cachedForecastData } = cachedWeatherData;
-      
-      setCurrentData(cachedCurrentData);
-      setHourlyForecast(cachedHourlyForecast);
-      setForecastData(cachedForecastData);
-      return;
-    }
+  try {
+    const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+    if (!apiKey) return alert('API key is missing');
 
-    try {
-      const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
-      if (!apiKey) return alert('API key is missing');
+    // Step 1: Get coordinates of the city
+    const geocodeResp = await axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`);
+    const geo = geocodeResp.data?.results?.[0];
+    if (!geo) return alert("Location not found");
 
-      const url = `https://api.tomorrow.io/v4/weather/forecast?location=${encodeURIComponent(city)}&apikey=${apiKey}&units=metric`;
-      const response = await axios.get(url);
-      const data = response.data;
+    const { latitude, longitude, name } = geo;
 
-      if (!data?.timelines?.hourly?.length || !data?.timelines?.daily?.length) {
-        alert('Incomplete weather data.');
-        return;
-      }
+    // Step 2: Fetch weather data
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code,pressure_msl,visibility&hourly=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum&timezone=auto`;
+    const weatherResp = await axios.get(weatherUrl);
+    const data = weatherResp.data;
 
-      const current = data.timelines.hourly[0].values;
-      const today = data.timelines.daily[0].values;
+    // Step 3: Parse data
+    const current = data.current;
+    const hourly = data.hourly;
+    const daily = data.daily;
 
-      const currentIcon = weatherCodeIcons[current.weatherCode] || sunny;
-      const hourlyData = data.timelines.hourly.slice(0, 12).map(hour => {
-        const values = hour.values;
-        return {
-          time: new Date(hour.time).toLocaleTimeString('en-US', { hour: 'numeric', hour12: true }),
-          temperature: Math.floor(values.temperature),
-          icon: weatherCodeIcons[values.weatherCode] || sunny,
-          humidity: values.humidity,
-          windSpeed: values.windSpeed,
-          weatherCode: values.weatherCode
-        };
-      });
+    const currentWeatherData = {
+      temperature: Math.floor(current.temperature_2m),
+      humidity: current.relative_humidity_2m,
+      windSpeed: current.wind_speed_10m,
+      windDirection: current.wind_direction_10m,
+      pressure: current.pressure_msl,
+      visibility: current.visibility,
+      icon: weatherCodeIcons[current.weather_code] || sunny,
+      location: name,
+      temperatureMin: Math.floor(daily.temperature_2m_min[0]),
+      temperatureMax: Math.floor(daily.temperature_2m_max[0]),
+      uvIndex: 0, // Open-Meteo free API doesn't give UV index by default
+      weatherCode: current.weather_code
+    };
 
-      const dailyData = data.timelines.daily.slice(0, 7).map(day => {
-        const values = day.values;
-        return {
-          date: new Date(day.time).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-          temperature: Math.floor(values.temperatureMax),
-          temperatureMin: Math.floor(values.temperatureMin),
-          humidity: values.humidityAvg,
-          windSpeed: values.windSpeedAvg,
-          icon: weatherCodeIcons[values.weatherCodeMax] || sunny,
-          precipitation: values.precipitationProbability,
-          weatherCode: values.weatherCodeMax
-        };
-      });
+    const hourlyData = hourly.time.slice(0, 12).map((time, i) => ({
+      time: new Date(time).toLocaleTimeString('en-US', { hour: 'numeric', hour12: true }),
+      temperature: Math.floor(hourly.temperature_2m[i]),
+      icon: weatherCodeIcons[hourly.weather_code[i]] || sunny,
+      humidity: hourly.relative_humidity_2m[i],
+      windSpeed: hourly.wind_speed_10m[i],
+      weatherCode: hourly.weather_code[i]
+    }));
 
-      const currentWeatherData = {
-        temperature: Math.floor(current.temperature),
-        temperatureMin: Math.floor(today.temperatureMin),
-        temperatureMax: Math.floor(today.temperatureMax),
-        humidity: current.humidity,
-        windSpeed: current.windSpeed,
-        windDirection: current.windDirection,
-        uvIndex: current.uvIndex,
-        pressure: current.pressureSurfaceLevel,
-        visibility: current.visibility,
-        icon: currentIcon,
-        location: data.location.name,
-        weatherCode: current.weatherCode
-      };
+    const dailyData = daily.time.map((date, i) => ({
+      date: new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+      temperature: Math.floor(daily.temperature_2m_max[i]),
+      temperatureMin: Math.floor(daily.temperature_2m_min[i]),
+      humidity: null,
+      windSpeed: null,
+      icon: weatherCodeIcons[daily.weather_code[i]] || sunny,
+      precipitation: daily.precipitation_sum[i],
+      weatherCode: daily.weather_code[i]
+    }));
 
-      setCurrentData(currentWeatherData);
-      setHourlyForecast(hourlyData);
-      setForecastData(dailyData);
+    setCurrentData(currentWeatherData);
+    setHourlyForecast(hourlyData);
+    setForecastData(dailyData);
 
-   
-      cacheWeatherData(city, {
-        currentData: currentWeatherData,
-        hourlyForecast: hourlyData,
-        forecastData: dailyData
-      });
+    cacheWeatherData(city, {
+      currentData: currentWeatherData,
+      hourlyForecast: hourlyData,
+      forecastData: dailyData
+    });
 
-    } catch (error) {
-      console.error('Error fetching weather:', error);
-      alert('WEATHER DATA NHI MIL PAYA');
-      setCurrentData(null);
-      setForecastData([]);
-      setHourlyForecast([]);
-    }
-  };
+  } catch (error) {
+    console.error('Error fetching weather:', error);
+    alert('WEATHER DATA NHI MIL PAYA');
+    setCurrentData(null);
+    setForecastData([]);
+    setHourlyForecast([]);
+  }
+};
+;
 
   useEffect(() => {
     if (location?.city) {
