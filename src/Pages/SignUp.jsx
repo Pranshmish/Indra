@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import './signup.css';
 
 
@@ -8,13 +8,17 @@ export default function Signup({ onSignup }) {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const gotologin = () => {
+    navigate('/login');
+  }
+
   const handleSignup = (e) => {
     e.preventDefault();
     localStorage.setItem('user', JSON.stringify({ email, password }));
     localStorage.setItem('auth', 'true'); // Set auth
     onSignup(); // Update auth state in App
     alert('Registered successfully!');
-    navigate('/home'); // Navigate to home after signup
+    navigate('/login'); 
   };
 
   return (
@@ -25,7 +29,12 @@ export default function Signup({ onSignup }) {
       <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
       <button type="submit">Signup</button>
     </form>
-    <p>Already have an account? <a href="/login">Login</a></p>
+   <p className="inline">
+  Already have an account?{' '}
+  <span onClick={gotologin} className="font-medium text-blue-700 cursor-pointer inline">
+    Login
+  </span>
+</p>
   </div>
   
   );
