@@ -1,25 +1,42 @@
-import { useState, useEffect, useContext, createContext } from 'react';
+
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const LocationContext = createContext();
 
 export const useLocation = () => useContext(LocationContext);
 
 export const LocationProvider = ({ children }) => {
-  const [location, setLocation] = useState(null);
+  const [city, setCity] = useState(null);
 
   useEffect(() => {
-    fetch('https://ipwho.is/')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setLocation(data);
+    if (!navigator.geolocation) {
+      console.error("Geolocation not supported by your browser");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+         
+          const res = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          );
+          const data = await res.json();
+          setCity(data.city || data.locality || data.principalSubdivision);
+        } catch (error) {
+          console.error("Reverse geocoding failed:", error);
         }
-      })
-      .catch(error => console.error("Fetch nhi ho raha", error));
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+      }
+    );
   }, []);
 
   return (
-    <LocationContext.Provider value={location}>
+    <LocationContext.Provider value={{ city }}>
       {children}
     </LocationContext.Provider>
   );

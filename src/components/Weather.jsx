@@ -129,8 +129,7 @@ const Weather = ({ city }) => {
       });
     }
 
-    // Remove the non-existent .location-name animation
-    // This was causing the error
+ 
 
     const weatherIcon = document.querySelector('.weather-icon');
     if (weatherIcon) {
@@ -163,10 +162,10 @@ const Weather = ({ city }) => {
   };
 
   const weatherCodeIcons = {
-  0: sunny,            // Clear
-  1: sunny,            // Mainly clear
+  0: sunny,            
+  1: sunny,            
   2: cloudy,           // Partly cloudy
-  3: cloudy,           // Overcast
+  3: cloudy,           
   45: cloudy,          // Fog
   48: cloudy,          // Depositing fog
   51: drizzle,         // Light drizzle
@@ -193,7 +192,7 @@ const Weather = ({ city }) => {
   99: storm            // Thunderstorm + heavy hail
 };
 
-const rainyCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82];
+const rainyCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82,95,96,993];
 const isRainy = rainyCodes.includes(currentData?.weatherCode);
 
 const snowCodes = [71, 73, 75, 77, 85, 86];
@@ -207,7 +206,7 @@ const isSnowing = snowCodes.includes(currentData?.weatherCode);
     return Date.now() - timestamp < thirtyMinutesInMs;
   };
 
-  // Function to get cached weather data for a city
+
   const getCachedWeatherData = (city) => {
     try {
       const cacheKey = `weather_${city.toLowerCase().trim()}`;
@@ -220,7 +219,7 @@ const isSnowing = snowCodes.includes(currentData?.weatherCode);
       if (isCacheValid(timestamp)) {
         return data;
       } else {
-        // Remove expired cache
+    
         localStorage.removeItem(cacheKey);
         return null;
       }
@@ -262,19 +261,17 @@ const search = async (city) => {
     const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
     if (!apiKey) return alert('API key is missing');
 
-    // Step 1: Get coordinates of the city
     const geocodeResp = await axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`);
     const geo = geocodeResp.data?.results?.[0];
     if (!geo) return alert("Location not found");
 
     const { latitude, longitude, name } = geo;
 
-    // Step 2: Fetch weather data
+    
     const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code,pressure_msl,visibility&hourly=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum&timezone=auto`;
     const weatherResp = await axios.get(weatherUrl);
     const data = weatherResp.data;
 
-    // Step 3: Parse data
     const current = data.current;
     const hourly = data.hourly;
     const daily = data.daily;
@@ -290,7 +287,7 @@ const search = async (city) => {
       location: name,
       temperatureMin: Math.floor(daily.temperature_2m_min[0]),
       temperatureMax: Math.floor(daily.temperature_2m_max[0]),
-      uvIndex: 0, // Open-Meteo free API doesn't give UV index by default
+      uvIndex: 0, 
       weatherCode: current.weather_code
     };
 
@@ -338,7 +335,7 @@ const search = async (city) => {
     if (location?.city) {
       search(location.city)
     }
-  }, [location])
+  }, [location?.city])
 
   useEffect(() => {
     if (isSnowing) {

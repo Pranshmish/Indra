@@ -4,7 +4,7 @@ import LoginPage from "./Pages/Login";
 import SignupPage from "./Pages/SignUp";
 import Home from "./Pages/Home";
 import Profile from "./Pages/Profile";
-import About from "./Pages/About"; // ✅ Import the About page
+import About from "./Pages/About"; 
 import ChatBot from './components/Chatbot';
 import { getWeatherSummary } from './components/weatherAPI';
 

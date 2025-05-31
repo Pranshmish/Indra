@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, provider, signInWithPopup } from './../firebase'; // Firebase setup
+import { auth, provider, signInWithPopup } from './../firebase'; 
 // import './Login.css';
 
 export default function Login({ onLogin, onUserNotFound }) {
@@ -15,13 +15,13 @@ export default function Login({ onLogin, onUserNotFound }) {
 
     if (!storedUser) {
       alert('User not found. Redirecting to signup...');
-      onUserNotFound(); // Tell App to redirect to signup
+      onUserNotFound();
       return;
     }
 
     if (email === storedUser.email && password === storedUser.password) {
       localStorage.setItem('auth', 'true');
-      onLogin(); // Tell App user is authenticated
+      onLogin(); 
       navigate('/home');
     } else {
       alert('Invalid credentials');
@@ -39,7 +39,7 @@ export default function Login({ onLogin, onUserNotFound }) {
         email: user.email
       }));
 
-      onLogin(); // Tell App user is authenticated
+      onLogin();
       navigate('/home');
     } catch (error) {
       console.error("Google login error:", error);
