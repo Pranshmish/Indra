@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import Snow from "./../Snow";
+import Snow from "./../snow";
 
 const SnowScene = () => {
   return (
