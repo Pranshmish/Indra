@@ -10,7 +10,7 @@ const Profile = () => {
   const handleLogout = () => {
     localStorage.removeItem("auth");
     localStorage.removeItem("user");
-    navigate("/"); // Redirect to the login page after logout
+    navigate("/login"); // Redirect to the login page after logout
   };
 
   return (

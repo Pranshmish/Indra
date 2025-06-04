@@ -34,18 +34,18 @@ function App() {
         <Route
           path="/signup"
           element={
-            isAuthenticated ? (
-              <Navigate to="/home" />
-            ) : (
-              <SignupPage onSignup={() => setIsAuthenticated(true)} />
-            )
+           <SignupPage/>
           }
         />
-        <Route 
-        path="/login"
-        element={
-          <LoginPage/>
-        }/>
+       <Route 
+  path="/login"
+  element={
+    <LoginPage onLogin={() => {
+      console.log("User successfully logged in");
+    }} />
+  }
+/>
+
         <Route
           path="/home"
           element={
