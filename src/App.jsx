@@ -4,8 +4,9 @@ import LoginPage from "./Pages/Login";
 import SignupPage from "./Pages/SignUp";
 import Home from "./Pages/Home";
 import Profile from "./Pages/Profile";
-import About from "./Pages/About"; 
+import About from "./Pages/About";
 import ChatBot from './components/Chatbot';
+import News from "./components/News";
 import { getWeatherSummary } from './components/weatherAPI';
 
 function App() {
@@ -34,18 +35,18 @@ function App() {
         <Route
           path="/signup"
           element={
-           <SignupPage/>
+            <SignupPage />
           }
         />
-       <Route 
-  path="/login"
-  element={
-    <LoginPage onLogin={() => {
-      console.log("User successfully logged in");
-    }} />
-  }
-/>
-
+        <Route
+          path="/login"
+          element={
+            <LoginPage onLogin={() => {
+              console.log("User successfully logged in");
+            }} />
+          }
+        />
+      
         <Route
           path="/home"
           element={
@@ -66,6 +67,11 @@ function App() {
           path="/profile"
           element={isAuthenticated ? <Profile /> : <Navigate to="/" />}
         />
+          <Route
+          path="/news"
+          element={isAuthenticated ? <News /> : <Navigate to="/" />} 
+          />
+
 
         <Route
           path="/about"

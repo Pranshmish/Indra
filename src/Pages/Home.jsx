@@ -80,9 +80,9 @@ const Home = () => {
               ×
             </button>
             <div className="p-6 flex flex-col h-full justify-between">
-              {/* User section removed as no user info available */}
+           
               
-              {/* Top Section – Tabs + Add City */}
+           
               <div>
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">City Tabs</h3>
                 <div className="space-y-2">
@@ -119,9 +119,16 @@ const Home = () => {
                   </button>
                 </form>
               </div>
+             
 
               {/* Bottom Section – Profile, About & Logout */}
               <div className="mt-6">
+                 <div className="py-2">
+                <button 
+                className="mt-2 w-full p-3 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-300"
+                onClick={() => navigate("/news")}>NEWS</button>
+
+              </div>
                 <button
                   onClick={() => handleNavigate("/profile")}
                   className="w-full mb-2 p-3 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-all duration-300"
