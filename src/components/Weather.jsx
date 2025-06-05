@@ -22,11 +22,13 @@ import { useSearchLocation } from './SearchLocation';
 import SnowScene from './3D/Render/SnowRenderer';
 import Lottie from "lottie-react";
 import flyingBear from "./SVG/flyingBear.json";
+import space from './SVG/space.json'
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Weather = ({ city }) => {
   const inputRef = useRef();
+  const spaceRef = useRef();
   const bearRef = useRef(null);
   const weatherRef = useRef();
   const currentWeatherRef = useRef();
@@ -381,7 +383,23 @@ const search = async (city) => {
 >
 
         
-<div ref={bearScrollRef} className="absolute w-100vw flex align-middle ">
+{darkMode && (
+  <div className='flex justify-center'>
+  <div
+    ref={spaceRef}
+    className="absolute  w-[700px] h-[850px]"
+  >
+    <Lottie
+      animationData={space}
+      loop
+      autoplay
+      style={{ height: "140%", width: "140%" }}
+    />
+  </div>
+  </div>
+)}
+        
+{!darkMode && (<div ref={bearScrollRef} className="absolute w-100vw flex align-middle ">
   <div ref={bearRef} className="w-[300px] h-[400px] absolute ">
     <Lottie
       animationData={flyingBear}
@@ -390,7 +408,7 @@ const search = async (city) => {
       style={{ width: '300%', height: '300%' }}
     />
   </div>
-</div>
+</div>)}
 
       <div className="max-w-6xl mx-auto px-4 py-8 relative z-10">
         <div className="flex justify-between items-center mb-8">
