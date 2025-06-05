@@ -20,11 +20,14 @@ import RainScene from './3D/Render/RainRenderer';
 import { useLocation } from './Location';
 import { useSearchLocation } from './SearchLocation';
 import SnowScene from './3D/Render/SnowRenderer';
+import Lottie from "lottie-react";
+import flyingBear from "./SVG/flyingBear.json";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Weather = ({ city }) => {
   const inputRef = useRef();
+  const bearRef = useRef(null);
   const weatherRef = useRef();
   const currentWeatherRef = useRef();
   const hourlyForecastRef = useRef();
@@ -32,6 +35,7 @@ const Weather = ({ city }) => {
   const weatherDetailsRef = useRef();
   const weeklyForecastRef = useRef();
   const searchTimeout = useRef(null);
+  const bearScrollRef = useRef();
 
   const [cityname, setCityName] = useState();
   const { searchQuery, setSearchQuery } = useSearchLocation();
@@ -61,6 +65,8 @@ const Weather = ({ city }) => {
   useEffect(() => {
     if (city) search(city);
   }, [city]);
+
+  
 
   useEffect(() => {
     if (!currentData) return;
@@ -98,6 +104,19 @@ const Weather = ({ city }) => {
           start: 'top center', end: '+=300', scrub: 1, pin: true, anticipatePin: 1
         }
       });
+    if (bearRef.current && bearScrollRef.current) {
+  gsap.to(bearRef.current, {
+    x: "30vw",
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: bearScrollRef.current,
+      start: "top top",
+      end: "+=500",
+      scrub: true,   
+    },
+  });
+}
+
 
       const hourlyCards = document.querySelectorAll('.hourly-card');
       if (hourlyCards.length > 0) {
@@ -192,7 +211,7 @@ const Weather = ({ city }) => {
   99: storm            // Thunderstorm + heavy hail
 };
 
-const rainyCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82,95,96,993];
+const rainyCodes = [ 61, 63, 65, 66, 67, 80, 81, 82,95,96,];
 const isRainy = rainyCodes.includes(currentData?.weatherCode);
 
 const snowCodes = [71, 73, 75, 77, 85, 86];
@@ -356,7 +375,22 @@ const search = async (city) => {
   };
 
   return (
-    <div ref={weatherRef} className={`min-h-screen transition-colors duration-500 ${darkMode ? 'bg-gradient-to-br from-indigo-950 via-gray-900 to-slate-900 text-white' : 'bg-gradient-to-br from-blue-500 via-purple-500 to-teal-400 text-white'}`}>
+    <div
+  ref={weatherRef}
+  className={`min-h-[200vh] transition-colors duration-500 ${darkMode ? 'bg-gradient-to-br from-indigo-950 via-gray-900 to-slate-900 text-white' : 'bg-gradient-to-br from-blue-500 via-purple-500 to-teal-400 text-white'}`}
+>
+
+        
+<div ref={bearScrollRef} className="absolute w-100vw flex align-middle ">
+  <div ref={bearRef} className="w-[300px] h-[400px] absolute ">
+    <Lottie
+      animationData={flyingBear}
+      loop={true}
+      autoplay={true}
+      style={{ width: '300%', height: '300%' }}
+    />
+  </div>
+</div>
 
       <div className="max-w-6xl mx-auto px-4 py-8 relative z-10">
         <div className="flex justify-between items-center mb-8">
