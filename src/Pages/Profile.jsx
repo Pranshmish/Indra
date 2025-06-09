@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import p from './../assets/gojo.jpg'
 
 const Profile = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -22,6 +23,7 @@ const Profile = () => {
 
         {user ? (
           <div className="text-center">
+            <img src={p} height={200} width={200} className="rounded-full border-2 border-blue mx-auto"></img>
             <p className="text-xl text-gray-700 dark:text-gray-200">
               Welcome back, <span className="font-bold">{user.email}</span>!
             </p>
