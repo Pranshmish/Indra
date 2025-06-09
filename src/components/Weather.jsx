@@ -403,7 +403,9 @@ const search = async (city) => {
 
   {!darkMode && (
     <div ref={bearScrollRef} className="absolute w-100vw flex align-middle">
-      <div ref={bearRef} className="w-[300px] h-[400px] absolute">
+      <div ref={bearRef} className="w-[300px] h-[420px] 
+absolute
+">
         <Lottie
           animationData={flyingBear}
           loop={true}
