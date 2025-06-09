@@ -377,202 +377,270 @@ const search = async (city) => {
   };
 
   return (
-    <div
+   <div
   ref={weatherRef}
-  className={`min-h-[200vh] transition-colors duration-500 ${darkMode ? 'bg-gradient-to-br from-indigo-950 via-gray-900 to-slate-900 text-white' : 'bg-gradient-to-br from-blue-500 via-purple-500 to-teal-400 text-white'}`}
+  className={`min-h-[200vh] transition-colors duration-500 ${
+    darkMode
+      ? 'bg-gradient-to-br from-purple-950 via-gray-900 to-indigo-900 text-white'
+      : 'bg-gradient-to-br from-purple-400 via-purple-600 to-purple-800 text-white'
+  }`}
 >
+  {darkMode && (
+    <div className="flex justify-center">
+      <div
+        ref={spaceRef}
+        className="absolute w-[250px] h-[300px] sm:w-[400px] sm:h-[500px] md:w-[550px] md:h-[650px] lg:w-[700px] lg:h-[850px]"
+      >
+        <Lottie
+          animationData={space}
+          loop
+          autoplay
+          style={{ height: "140%", width: "140%" }}
+        />
+      </div>
+    </div>
+  )}
 
-        
-{darkMode && (
-  <div className='flex justify-center'>
-  <div
-    ref={spaceRef}
-    className="absolute  w-[700px] h-[850px]"
-  >
-    <Lottie
-      animationData={space}
-      loop
-      autoplay
-      style={{ height: "140%", width: "140%" }}
-    />
-  </div>
-  </div>
-)}
-        
-{!darkMode && (<div ref={bearScrollRef} className="absolute w-100vw flex align-middle ">
-  <div ref={bearRef} className="w-[300px] h-[400px] absolute ">
-    <Lottie
-      animationData={flyingBear}
-      loop={true}
-      autoplay={true}
-      style={{ width: '300%', height: '300%' }}
-    />
-  </div>
-</div>)}
+  {!darkMode && (
+    <div ref={bearScrollRef} className="absolute w-100vw flex align-middle">
+      <div ref={bearRef} className="w-[300px] h-[400px] absolute">
+        <Lottie
+          animationData={flyingBear}
+          loop={true}
+          autoplay={true}
+          style={{ width: "300%", height: "300%" }}
+        />
+      </div>
+    </div>
+  )}
 
-      <div className="max-w-6xl mx-auto px-4 py-8 relative z-10">
-        <div className="flex justify-between items-center mb-8">
-          <div className="relative w-full max-w-md">
-            <input
-              onKeyDown={handleKeyDown}
-              onChange={handleSearchInputChange}
-              ref={inputRef}
-              type="text"
-              placeholder="Search city..."
-              className="w-full p-4 pl-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-white placeholder-white/70 shadow-lg"
-            />
-            <img
-              src={serch_icon}
-              alt="Search"
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-70 cursor-pointer hover:opacity-100 transition-opacity"
-              onClick={() => search(searchQuery)}
-            />
+  <div className="max-w-6xl mx-auto px-4 py-8 relative z-10">
+    <div className="flex justify-between items-center mb-8">
+      <div className="relative w-full max-w-md">
+        <input
+          onKeyDown={handleKeyDown}
+          onChange={handleSearchInputChange}
+          ref={inputRef}
+          type="text"
+          placeholder="Search city..."
+          className="w-full p-4 pl-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-white placeholder-white/70 shadow-lg"
+        />
+        <img
+          src={serch_icon}
+          alt="Search"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-70 cursor-pointer hover:opacity-100 transition-opacity"
+          onClick={() => search(searchQuery)}
+        />
+      </div>
+
+      <div className="flex gap-2">
+        <button
+          className="p-3 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 text-white shadow-lg"
+          onClick={() => setDarkMode(!darkMode)}
+        >
+          {darkMode ? "☀️" : "🌙"}
+        </button>
+      </div>
+    </div>
+
+    {currentData ? (
+      <div className="space-y-8">
+        {isRainy && <RainScene />}
+        {isSnowing && <SnowScene />}
+        <div
+          ref={currentWeatherRef}
+          className="bg-white/20 backdrop-blur-md rounded-3xl p-8 shadow-xl transform hover:scale-[1.02] transition-transform duration-300"
+        >
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="text-center md:text-left mb-6 md:mb-0">
+              <p className="text-3xl opacity-80">📍{cityname}</p>
+              <p className="text-xl ml-4 opacity-80">
+                {new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+            <div className="flex items-center">
+              <img
+                src={currentData.icon}
+                alt="Current"
+                className="weather-icon w-24 h-24 mr-4"
+              />
+              <div>
+                <p className="temperature-display text-7xl font-bold">
+                  {currentData.temperature}°C
+                </p>
+                <div className="flex gap-4 text-lg">
+                  <span>H: {currentData.temperatureMax}°</span>
+                  <span>L: {currentData.temperatureMin}°</span>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div className="flex gap-2">
-            <button
-              className="p-3 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 text-white shadow-lg"
-              onClick={() => setDarkMode(!darkMode)}
+        </div>
+        <div
+          ref={weatherDetailsRef}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 weather-data"
+        >
+          {[
+            {
+              label: "Humidity",
+              value: `${currentData.humidity}%`,
+              icon: humidity,
+            },
+            {
+              label: "Wind Speed",
+              value: `${currentData.windSpeed}km/hr`,
+              icon: wind,
+            },
+            { label: "UV Index", value: currentData.uvIndex, icon: uv },
+            {
+              label: "Wind Direc.",
+              value: `${currentData.windDirection}°`,
+              icon: wd,
+            },
+            {
+              label: "Pressure",
+              value: `${currentData.pressure} hPa`,
+              icon: ap,
+            },
+            {
+              label: "Visibility",
+              value: `${currentData.visibility} km`,
+              icon: vv,
+            },
+          ].map((item, index) => (
+            <div
+              key={index}
+              onClick={() => handleDataClick(item.label, item.value, item.icon)}
+              className="p-4 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-white/30 hover:backdrop-blur-lg hover:border-white/40"
             >
-              {darkMode ? '☀️' : '🌙'}
+              <div className="flex items-center mb-2">
+                <img
+                  src={item.icon}
+                  alt={item.label}
+                  className="w-8 h-8 mr-2"
+                />
+                <h4 className="font-medium text-white">{item.label}</h4>
+              </div>
+              <p className="text-2xl font-bold text-white">{item.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div
+          ref={hourlyForecastRef}
+          className="bg-white/20 backdrop-blur-md rounded-3xl p-6 shadow-xl overflow-hidden"
+        >
+          <h3 className="text-2xl font-bold mb-4">Hourly Forecast</h3>
+          <div className="overflow-hidden">
+            <div ref={hourlyScrollerRef} className="flex gap-4 pb-4">
+              {visibleHourly.map((hour, index) => (
+                <div
+                  key={index}
+                  className="hourly-card flex-shrink-0 w-32 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-center shadow-lg transform hover:scale-105 transition-transform duration-300"
+                >
+                  <p className="text-lg font-medium mb-2">{hour.time}</p>
+                  <img
+                    src={hour.icon}
+                    alt="weather"
+                    className="w-12 h-12 mx-auto my-2"
+                  />
+                  <p className="text-2xl font-bold">{hour.temperature}°C</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-center mt-4 gap-2">
+            <button
+              onClick={handlePrev}
+              disabled={hourStartIndex === 0}
+              className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 disabled:opacity-50 shadow-lg"
+            >
+              ‹
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={hourStartIndex + hoursPerSlide >= hourlyForecast.length}
+              className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 disabled:opacity-50 shadow-lg"
+            >
+              ›
             </button>
           </div>
         </div>
 
-        {currentData ? (
-          <div className="space-y-8">
-            {isRainy && (<RainScene />)}
-            {isSnowing && (<SnowScene />)}
-            <div ref={currentWeatherRef} className="bg-white/20 backdrop-blur-md rounded-3xl p-8 shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
-              <div className="flex flex-col md:flex-row items-center justify-between">
-                <div className="text-center md:text-left mb-6 md:mb-0">
-                  <p className="text-3xl opacity-80">📍
-                    {cityname}</p>
-                  <p className="text-xl ml-4 opacity-80">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>
-                </div>
-                <div className="flex items-center">
-                  <img src={currentData.icon} alt="Current" className="weather-icon w-24 h-24 mr-4" />
-                  <div>
-                    <p className="temperature-display text-7xl font-bold">{currentData.temperature}°C</p>
-                    <div className="flex gap-4 text-lg">
-                      <span>H: {currentData.temperatureMax}°</span>
-                      <span>L: {currentData.temperatureMin}°</span>
-                    </div>
+        <div
+          ref={weeklyForecastRef}
+          className="bg-white/20 backdrop-blur-md rounded-3xl p-6 shadow-xl"
+        >
+          <h3 className="text-2xl font-bold mb-4">7-Day Forecast</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
+            {forecastData.map((day, index) => (
+              <div
+                key={index}
+                className="weekly-card p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transform hover:scale-105 transition-transform duration-300"
+              >
+                <div className="text-center">
+                  <p className="text-lg font-medium mb-2">{day.date}</p>
+                  <img
+                    src={day.icon}
+                    alt="weather"
+                    className="w-16 h-16 mx-auto my-2"
+                  />
+                  <div className="flex justify-center items-center gap-2">
+                    <p className="text-2xl font-bold">{day.temperature}°</p>
+                    <p className="text-lg opacity-80">{day.temperatureMin}°</p>
                   </div>
+                  <div className="mt-2 flex justify-center items-center gap-2 text-sm">
+                    <span className="flex items-center">
+                      <img
+                        src={humidity}
+                        alt="humidity"
+                        className="w-4 h-4 mr-1"
+                      />
+                      {day.humidity}%
+                    </span>
+                    <span className="flex items-center">
+                      <img src={wind} alt="wind" className="w-4 h-4 mr-1" />
+                      {day.windSpeed} km/h
+                    </span>
+                  </div>
+                  {day.precipitation > 0 && (
+                    <div className="mt-2 text-sm text-blue-300">
+                      {day.precipitation}% chance of rain
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-            <div ref={weatherDetailsRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 weather-data">
-  {[
-    { label: "Humidity", value: `${currentData.humidity}%`, icon: humidity },
-    { label: "Wind Speed", value: `${currentData.windSpeed}km/hr`, icon: wind },
-    { label: "UV Index", value: currentData.uvIndex, icon: uv },
-    { label: "Wind Direc.", value: `${currentData.windDirection}°`, icon: wd },
-    { label: "Pressure", value: `${currentData.pressure} hPa`, icon: ap },
-    { label: "Visibility", value: `${currentData.visibility} km`, icon: vv }
-  ].map((item, index) => (
-    <div
-      key={index}
-      onClick={() => handleDataClick(item.label, item.value, item.icon)}
-      className="p-4 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-white/30 hover:backdrop-blur-lg hover:border-white/40"
-    >
-      <div className="flex items-center mb-2">
-        <img src={item.icon} alt={item.label} className="w-8 h-8 mr-2" />
-        <h4 className="font-medium text-white">{item.label}</h4>
+            ))}
+          </div>
+        </div>
       </div>
-      <p className="text-2xl font-bold text-white">{item.value}</p>
-    </div>
-  ))}
+    ) : (
+      <div className="text-center p-12 bg-white/20 backdrop-blur-md rounded-3xl shadow-xl">
+        <p className="text-2xl">Enter a city name to get started</p>
+      </div>
+    )}
+  </div>
+
+  <Modal show={showModal} onClose={handleCloseModal}>
+    {selectedDetail && (
+      <div
+        className={`p-6 rounded-2xl ${
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
+        } shadow-2xl`}
+      >
+        <h3 className="text-xl font-semibold mb-4">{selectedDetail.label}</h3>
+        <img src={selectedDetail.icon} alt="" className="w-12 h-12 mb-4" />
+        <p className="text-2xl font-bold">{selectedDetail.value}</p>
+      </div>
+    )}
+  </Modal>
 </div>
 
-            <div ref={hourlyForecastRef} className="bg-white/20 backdrop-blur-md rounded-3xl p-6 shadow-xl overflow-hidden">
-              <h3 className="text-2xl font-bold mb-4">Hourly Forecast</h3>
-              <div className="overflow-hidden">
-                <div ref={hourlyScrollerRef} className="flex gap-4 pb-4">
-                  {visibleHourly.map((hour, index) => (
-                    <div
-                      key={index}
-                      className="hourly-card flex-shrink-0 w-32 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-center shadow-lg transform hover:scale-105 transition-transform duration-300"
-                    >
-                      <p className="text-lg font-medium mb-2">{hour.time}</p>
-                      <img src={hour.icon} alt="weather" className="w-12 h-12 mx-auto my-2" />
-                      <p className="text-2xl font-bold">{hour.temperature}°C</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="flex justify-center mt-4 gap-2">
-
-                <button
-                  onClick={handlePrev}
-                  disabled={hourStartIndex === 0}
-                  className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 disabled:opacity-50 shadow-lg"
-                >
-                  ‹
-                </button>
-                <button
-                  onClick={handleNext}
-                  disabled={hourStartIndex + hoursPerSlide >= hourlyForecast.length}
-                  className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 disabled:opacity-50 shadow-lg"
-                >
-                  ›
-                </button>
-              </div>
-            </div>
-
-            <div ref={weeklyForecastRef} className="bg-white/20 backdrop-blur-md rounded-3xl p-6 shadow-xl">
-              <h3 className="text-2xl font-bold mb-4">7-Day Forecast</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
-                {forecastData.map((day, index) => (
-                  <div
-                    key={index}
-                    className="weekly-card p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transform hover:scale-105 transition-transform duration-300"
-                  >
-                    <div className="text-center">
-                      <p className="text-lg font-medium mb-2">{day.date}</p>
-                      <img src={day.icon} alt="weather" className="w-16 h-16 mx-auto my-2" />
-                      <div className="flex justify-center items-center gap-2">
-                        <p className="text-2xl font-bold">{day.temperature}°</p>
-                        <p className="text-lg opacity-80">{day.temperatureMin}°</p>
-                      </div>
-                      <div className="mt-2 flex justify-center items-center gap-2 text-sm">
-                        <span className="flex items-center">
-                          <img src={humidity} alt="humidity" className="w-4 h-4 mr-1" />
-                          {day.humidity}%
-                        </span>
-                        <span className="flex items-center">
-                          <img src={wind} alt="wind" className="w-4 h-4 mr-1" />
-                          {day.windSpeed} km/h
-                        </span>
-                      </div>
-                      {day.precipitation > 0 && (
-                        <div className="mt-2 text-sm text-blue-300">
-                          {day.precipitation}% chance of rain
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="text-center p-12 bg-white/20 backdrop-blur-md rounded-3xl shadow-xl">
-            <p className="text-2xl">Enter a city name to get started</p>
-          </div>
-        )}
-      </div>
-
-      <Modal show={showModal} onClose={handleCloseModal}>
-        {selectedDetail && (
-          <div className={`p-6 rounded-2xl ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} shadow-2xl`}>
-            <h3 className="text-xl font-semibold mb-4">{selectedDetail.label}</h3>
-            <img src={selectedDetail.icon} alt="" className="w-12 h-12 mb-4" />
-            <p className="text-2xl font-bold">{selectedDetail.value}</p>
-          </div>
-        )}
-      </Modal>
-    </div>
   )
 }
 

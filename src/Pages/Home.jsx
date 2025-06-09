@@ -104,11 +104,14 @@ const Home = () => {
             ☰
           </button>
 
-          <div
-            className={`fixed top-0 left-0 h-full w-64 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-xl transform transition-transform duration-300 ease-in-out sidebar ${
-              sidebarOpen ? "translate-x-0" : "-translate-x-full"
-            } z-40`}
-          >
+       <div
+  className={`fixed top-0 left-0 w-48 sm:w-56 md:w-64
+    bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-xl
+    transform transition-transform duration-300 ease-in-out z-40 sidebar
+    h-screen overflow-y-auto flex flex-col
+    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+  `}
+>
             <button
               className="absolute top-4 right-4 text-2xl text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"
               onClick={() => setSidebarOpen(false)}
