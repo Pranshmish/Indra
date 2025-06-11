@@ -389,7 +389,7 @@ const search = async (city) => {
     <div className="flex justify-center">
       <div
         ref={spaceRef}
-        className="absolute w-[200px] h-[250px] xs:w-[250px] xs:h-[300px] sm:w-[350px] sm:h-[450px] md:w-[450px] md:h-[550px] lg:w-[600px] lg:h-[750px] xl:w-[700px] xl:h-[850px]"
+        className="absolute w-[200px] h-[250px] xs:w-[250px] xs:h-[300px] sm:w-[650px] sm:h-[750px] md:w-[450px] md:h-[550px] lg:w-[600px] lg:h-[750px] xl:w-[700px] xl:h-[850px]"
       >
         <Lottie
           animationData={space}
@@ -402,13 +402,13 @@ const search = async (city) => {
   )}
 
   {!darkMode && (
-    <div ref={bearScrollRef} className="absolute w-100vw flex align-middle">
-      <div ref={bearRef} className="w-[150px] h-[200px] xs:w-[250px] xs:h-[350px] sm:w-[300px] sm:h-[420px] md:w-[350px] md:h-[490px] absolute">
+    <div ref={bearScrollRef} className="absolute w-auto h-auto flex align-middle">
+      <div ref={bearRef} className="w-[150px] h-[230px] xs:w-[250px] xs:h-[350px] sm:w-[300px] sm:h-[420px] md:w-[350px] md:h-[490px] absolute">
         <Lottie
           animationData={flyingBear}
           loop={true}
           autoplay={true}
-          style={{ width: "200%", height: "250%" }}
+          style={{ width: "200%", height: "260%" }}
         />
       </div>
     </div>
@@ -574,7 +574,7 @@ const search = async (city) => {
 
         <div
           ref={weeklyForecastRef}
-          className="bg-white/20 backdrop-blur-md rounded-2xl xs:rounded-3xl p-4 xs:p-5 sm:p-6 shadow-xl"
+          className="bg-white/20 backdrop-blur-md rounded-2xl xs:rounded-3xl p-4 xs:p-5 sm:p-6 shadow-xl overflow-hidden"
         >
           <h3 className="text-xl xs:text-2xl font-bold mb-3 xs:mb-4">7-Day Forecast</h3>
           <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 xs:gap-3 sm:gap-4">

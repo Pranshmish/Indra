@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import profile from './../assets/propic.jpg';
 import profile2 from './../assets/lily.jpg';
 import profile3 from './../assets/pic3.jpg';
@@ -45,12 +45,19 @@ const creators = [
   },
 ];
 const About = () => {
-  const [openIndex, setOpenIndex] = useState(null);
-  const navigate = useNavigate(); 
+
+  const navigate = useNavigate();
+
+  const [openStates, setOpenStates] = useState(Array(creators.length).fill(false));
 
   const toggleMore = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
+    setOpenStates((prev) => {
+      const newStates = [...prev];
+      newStates[index] = !newStates[index]; 
+      return newStates;
+    });
   };
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center 
@@ -65,22 +72,22 @@ const About = () => {
         Hi! We are the developers of this weather app. Built with React, GSAP,
         Tomorrow.io API, and a passion for clean UI. We hope you enjoy using it!
       </p>
-      
+
       <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-6">
         (Batch '28)
       </h1>
       <a href="https://mmmut.xyz/" target="blank"><img src={logo} width={150} height={150} className="rounded-full transition-all duration-300 transform hover:scale-115  border-2 border-transparent dark:hover:border-blue-400">
       </img></a>
-     <br></br> <p className="text-xl text-center max-w-2xl text-blue-800 dark:text-blue-300 font-medium mb-6">
+      <br></br> <p className="text-xl text-center max-w-2xl text-blue-800 dark:text-blue-300 font-medium mb-6">
         We are proud members of <span className="font-bold">MMMUT RESO</span>, dedicated to innovation and teamwork.
-     </p>
+      </p>
 
 
-      <div className="flex flex-wrap justify-center gap-8">
+      <div className="flex flex-wrap items-start justify-center gap-8">
         {creators.map((creator, index) => (
           <div
             key={index}
-            className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6 w-72 flex flex-col items-center text-center 
+            className="bg-white h-auto dark:bg-gray-800 shadow-xl rounded-2xl p-6 w-72 flex flex-col items-center text-center 
               transition-all duration-300 transform hover:scale-105 
               border-2 border-transparent hover:border-blue-500 dark:hover:border-blue-400"
           >
@@ -95,7 +102,7 @@ const About = () => {
             <p className="text-sm text-gray-600 dark:text-gray-300">{creator.role}</p>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{creator.bio}</p>
 
-            {openIndex === index && (
+            {openStates[index] && (
               <>
                 <p className="text-sm mt-2 text-gray-600 dark:text-green-200">
                   Branch: {creator.branch}
@@ -110,21 +117,22 @@ const About = () => {
               onClick={() => toggleMore(index)}
               className="mt-3 text-blue-500 dark:text-blue-300 hover:underline text-sm"
             >
-              {openIndex === index ? "Show Less" : "Read More"}
+             {openStates[index] ? "Show Less" : "Read More"}
+
             </button>
           </div>
         ))}
       </div>
       <br></br>
       <br></br>
-       <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-6">
+      <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-6">
         Contacts
       </h1>
       <div className="flex flex-wrap justify-center gap-8">
-       <a href="https://www.instagram.com/mmmut.xyz/" target="blank"><img src={inst} width={70} height={70} className="rounded-full transition-all duration-300 transform hover:scale-115  border-2 border-transparent dark:hover:border-blue-400" /></a>
-       <a href="https://mmmut.xyz/" target="blank"><img src={tele} width={80} height={80} className="rounded-full transition-all duration-300 transform hover:scale-115  border-2 border-transparent dark:hover:border-blue-400 " /></a>
-       <a href="https://www.linkedin.com/company/mmmut/posts/?feedView=all" target="blank"><img src={link} width={70} height={70} className="rounded-full transition-all duration-300 transform hover:scale-115  border-2 border-transparent dark:hover:border-blue-400" /></a>
-       <a href="https://mmmut.xyz/" target="blank"><img src={twit} width={70} height={70} className="rounded-full transition-all duration-300 transform hover:scale-115  border-2 border-transparent dark:hover:border-blue-400" /></a>
+        <a href="https://www.instagram.com/mmmut.xyz/" target="blank"><img src={inst} width={70} height={70} className="rounded-full transition-all duration-300 transform hover:scale-115  border-2 border-transparent dark:hover:border-blue-400" /></a>
+        <a href="https://mmmut.xyz/" target="blank"><img src={tele} width={80} height={80} className="rounded-full transition-all duration-300 transform hover:scale-115  border-2 border-transparent dark:hover:border-blue-400 " /></a>
+        <a href="https://www.linkedin.com/company/mmmut/posts/?feedView=all" target="blank"><img src={link} width={70} height={70} className="rounded-full transition-all duration-300 transform hover:scale-115  border-2 border-transparent dark:hover:border-blue-400" /></a>
+        <a href="https://mmmut.xyz/" target="blank"><img src={twit} width={70} height={70} className="rounded-full transition-all duration-300 transform hover:scale-115  border-2 border-transparent dark:hover:border-blue-400" /></a>
 
       </div>
       <button
@@ -133,7 +141,7 @@ const About = () => {
       >
         Return Home
       </button>
-      
+
     </div>
   );
 };
