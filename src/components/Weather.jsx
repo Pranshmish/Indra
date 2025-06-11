@@ -108,8 +108,8 @@ const Weather = ({ city }) => {
       });
     if (bearRef.current && bearScrollRef.current) {
   gsap.to(bearRef.current, {
-    x: "30vw",
-    ease: "power2.out",
+    x: "20vw",
+    ease: "power3.out",
     scrollTrigger: {
       trigger: bearScrollRef.current,
       start: "top top",
@@ -377,7 +377,7 @@ const search = async (city) => {
   };
 
   return (
-   <div
+ <div
   ref={weatherRef}
   className={`min-h-[200vh] transition-colors duration-500 ${
     darkMode
@@ -389,7 +389,7 @@ const search = async (city) => {
     <div className="flex justify-center">
       <div
         ref={spaceRef}
-        className="absolute w-[250px] h-[300px] sm:w-[400px] sm:h-[500px] md:w-[550px] md:h-[650px] lg:w-[700px] lg:h-[850px]"
+        className="absolute w-[200px] h-[250px] xs:w-[250px] xs:h-[300px] sm:w-[350px] sm:h-[450px] md:w-[450px] md:h-[550px] lg:w-[600px] lg:h-[750px] xl:w-[700px] xl:h-[850px]"
       >
         <Lottie
           animationData={space}
@@ -403,41 +403,39 @@ const search = async (city) => {
 
   {!darkMode && (
     <div ref={bearScrollRef} className="absolute w-100vw flex align-middle">
-      <div ref={bearRef} className="w-[300px] h-[420px] 
-absolute
-">
+      <div ref={bearRef} className="w-[150px] h-[200px] xs:w-[250px] xs:h-[350px] sm:w-[300px] sm:h-[420px] md:w-[350px] md:h-[490px] absolute">
         <Lottie
           animationData={flyingBear}
           loop={true}
           autoplay={true}
-          style={{ width: "300%", height: "300%" }}
+          style={{ width: "200%", height: "250%" }}
         />
       </div>
     </div>
   )}
 
-  <div className="max-w-6xl mx-auto px-4 py-8 relative z-10">
-    <div className="flex justify-between items-center mb-8">
-      <div className="relative w-full max-w-md">
+  <div className="max-w-7xl mx-auto px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 py-4 xs:py-6 sm:py-8 relative z-10">
+    <div className="flex flex-col xs:flex-row justify-between items-center mb-4 xs:mb-6 sm:mb-8 gap-4 xs:gap-0">
+      <div className="relative w-full max-w-xs xs:max-w-sm sm:max-w-md">
         <input
           onKeyDown={handleKeyDown}
           onChange={handleSearchInputChange}
           ref={inputRef}
           type="text"
           placeholder="Search city..."
-          className="w-full p-4 pl-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-white placeholder-white/70 shadow-lg"
+          className="w-full p-3 xs:p-4 pl-10 xs:pl-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-white placeholder-white/70 shadow-lg text-sm xs:text-base"
         />
         <img
           src={serch_icon}
           alt="Search"
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-70 cursor-pointer hover:opacity-100 transition-opacity"
+          className="absolute left-3 xs:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 xs:w-5 xs:h-5 opacity-70 cursor-pointer hover:opacity-100 transition-opacity"
           onClick={() => search(searchQuery)}
         />
       </div>
 
       <div className="flex gap-2">
         <button
-          className="p-3 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 text-white shadow-lg"
+          className="p-2 xs:p-3 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 text-white shadow-lg text-lg xs:text-xl"
           onClick={() => setDarkMode(!darkMode)}
         >
           {darkMode ? "☀️" : "🌙"}
@@ -446,17 +444,17 @@ absolute
     </div>
 
     {currentData ? (
-      <div className="space-y-8">
+      <div className="space-y-4 xs:space-y-6 sm:space-y-8">
         {isRainy && <RainScene />}
         {isSnowing && <SnowScene />}
         <div
           ref={currentWeatherRef}
-          className="bg-white/20 backdrop-blur-md rounded-3xl p-8 shadow-xl transform hover:scale-[1.02] transition-transform duration-300"
+          className="bg-white/20 backdrop-blur-md rounded-2xl xs:rounded-3xl p-4 xs:p-6 sm:p-8 shadow-xl transform hover:scale-[1.02] transition-transform duration-300"
         >
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="text-center md:text-left mb-6 md:mb-0">
-              <p className="text-3xl opacity-80">📍{cityname}</p>
-              <p className="text-xl ml-4 opacity-80">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+            <div className="text-center md:text-left mb-4 md:mb-0">
+              <p className="text-xl xs:text-2xl sm:text-3xl opacity-80">📍{cityname}</p>
+              <p className="text-sm xs:text-lg sm:text-xl ml-0 md:ml-4 opacity-80">
                 {new Date().toLocaleDateString("en-US", {
                   weekday: "long",
                   month: "long",
@@ -469,13 +467,13 @@ absolute
               <img
                 src={currentData.icon}
                 alt="Current"
-                className="weather-icon w-24 h-24 mr-4"
+                className="weather-icon w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 mr-2 xs:mr-4"
               />
               <div>
-                <p className="temperature-display text-7xl font-bold">
+                <p className="temperature-display text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-bold">
                   {currentData.temperature}°C
                 </p>
-                <div className="flex gap-4 text-lg">
+                <div className="flex gap-2 xs:gap-4 text-sm xs:text-base sm:text-lg">
                   <span>H: {currentData.temperatureMax}°</span>
                   <span>L: {currentData.temperatureMin}°</span>
                 </div>
@@ -485,7 +483,7 @@ absolute
         </div>
         <div
           ref={weatherDetailsRef}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 weather-data"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 xs:gap-3 sm:gap-4 weather-data"
         >
           {[
             {
@@ -518,56 +516,56 @@ absolute
             <div
               key={index}
               onClick={() => handleDataClick(item.label, item.value, item.icon)}
-              className="p-4 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-white/30 hover:backdrop-blur-lg hover:border-white/40"
+              className="p-2 xs:p-3 sm:p-4 rounded-xl xs:rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-white/30 hover:backdrop-blur-lg hover:border-white/40"
             >
-              <div className="flex items-center mb-2">
+              <div className="flex items-center mb-1 xs:mb-2">
                 <img
                   src={item.icon}
                   alt={item.label}
-                  className="w-8 h-8 mr-2"
+                  className="w-5 h-5 xs:w-6 xs:h-6 sm:w-8 sm:h-8 mr-1 xs:mr-2"
                 />
-                <h4 className="font-medium text-white">{item.label}</h4>
+                <h4 className="font-medium text-white text-xs xs:text-sm sm:text-base">{item.label}</h4>
               </div>
-              <p className="text-2xl font-bold text-white">{item.value}</p>
+              <p className="text-lg xs:text-xl sm:text-2xl font-bold text-white">{item.value}</p>
             </div>
           ))}
         </div>
 
         <div
           ref={hourlyForecastRef}
-          className="bg-white/20 backdrop-blur-md rounded-3xl p-6 shadow-xl overflow-hidden"
+          className="bg-white/20 backdrop-blur-md rounded-2xl xs:rounded-3xl p-4 xs:p-5 sm:p-6 shadow-xl overflow-hidden"
         >
-          <h3 className="text-2xl font-bold mb-4">Hourly Forecast</h3>
+          <h3 className="text-xl xs:text-2xl font-bold mb-3 xs:mb-4">Hourly Forecast</h3>
           <div className="overflow-hidden">
-            <div ref={hourlyScrollerRef} className="flex gap-4 pb-4">
+            <div ref={hourlyScrollerRef} className="flex gap-2 xs:gap-3 sm:gap-4 pb-4">
               {visibleHourly.map((hour, index) => (
                 <div
                   key={index}
-                  className="hourly-card flex-shrink-0 w-32 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-center shadow-lg transform hover:scale-105 transition-transform duration-300"
+                  className="hourly-card flex-shrink-0 w-24 xs:w-28 sm:w-32 p-2 xs:p-3 sm:p-4 rounded-xl xs:rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-center shadow-lg transform hover:scale-105 transition-transform duration-300"
                 >
-                  <p className="text-lg font-medium mb-2">{hour.time}</p>
+                  <p className="text-sm xs:text-base sm:text-lg font-medium mb-1 xs:mb-2">{hour.time}</p>
                   <img
                     src={hour.icon}
                     alt="weather"
-                    className="w-12 h-12 mx-auto my-2"
+                    className="w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 mx-auto my-1 xs:my-2"
                   />
-                  <p className="text-2xl font-bold">{hour.temperature}°C</p>
+                  <p className="text-lg xs:text-xl sm:text-2xl font-bold">{hour.temperature}°C</p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="flex justify-center mt-4 gap-2">
+          <div className="flex justify-center mt-3 xs:mt-4 gap-2">
             <button
               onClick={handlePrev}
               disabled={hourStartIndex === 0}
-              className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 disabled:opacity-50 shadow-lg"
+              className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 disabled:opacity-50 shadow-lg text-lg xs:text-xl"
             >
               ‹
             </button>
             <button
               onClick={handleNext}
               disabled={hourStartIndex + hoursPerSlide >= hourlyForecast.length}
-              className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 disabled:opacity-50 shadow-lg"
+              className="p-2 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-300 disabled:opacity-50 shadow-lg text-lg xs:text-xl"
             >
               ›
             </button>
@@ -576,42 +574,42 @@ absolute
 
         <div
           ref={weeklyForecastRef}
-          className="bg-white/20 backdrop-blur-md rounded-3xl p-6 shadow-xl"
+          className="bg-white/20 backdrop-blur-md rounded-2xl xs:rounded-3xl p-4 xs:p-5 sm:p-6 shadow-xl"
         >
-          <h3 className="text-2xl font-bold mb-4">7-Day Forecast</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
+          <h3 className="text-xl xs:text-2xl font-bold mb-3 xs:mb-4">7-Day Forecast</h3>
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 xs:gap-3 sm:gap-4">
             {forecastData.map((day, index) => (
               <div
                 key={index}
-                className="weekly-card p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transform hover:scale-105 transition-transform duration-300"
+                className="weekly-card p-3 xs:p-4 rounded-xl xs:rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg transform hover:scale-105 transition-transform duration-300"
               >
                 <div className="text-center">
-                  <p className="text-lg font-medium mb-2">{day.date}</p>
+                  <p className="text-sm xs:text-base sm:text-lg font-medium mb-1 xs:mb-2">{day.date}</p>
                   <img
                     src={day.icon}
                     alt="weather"
-                    className="w-16 h-16 mx-auto my-2"
+                    className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 mx-auto my-1 xs:my-2"
                   />
-                  <div className="flex justify-center items-center gap-2">
-                    <p className="text-2xl font-bold">{day.temperature}°</p>
-                    <p className="text-lg opacity-80">{day.temperatureMin}°</p>
+                  <div className="flex justify-center items-center gap-1 xs:gap-2">
+                    <p className="text-lg xs:text-xl sm:text-2xl font-bold">{day.temperature}°</p>
+                    <p className="text-sm xs:text-base sm:text-lg opacity-80">{day.temperatureMin}°</p>
                   </div>
-                  <div className="mt-2 flex justify-center items-center gap-2 text-sm">
+                  <div className="mt-1 xs:mt-2 flex flex-col xs:flex-row justify-center items-center gap-1 xs:gap-2 text-xs xs:text-sm">
                     <span className="flex items-center">
                       <img
                         src={humidity}
                         alt="humidity"
-                        className="w-4 h-4 mr-1"
+                        className="w-3 h-3 xs:w-4 xs:h-4 mr-1"
                       />
                       {day.humidity}%
                     </span>
                     <span className="flex items-center">
-                      <img src={wind} alt="wind" className="w-4 h-4 mr-1" />
+                      <img src={wind} alt="wind" className="w-3 h-3 xs:w-4 xs:h-4 mr-1" />
                       {day.windSpeed} km/h
                     </span>
                   </div>
                   {day.precipitation > 0 && (
-                    <div className="mt-2 text-sm text-blue-300">
+                    <div className="mt-1 xs:mt-2 text-xs xs:text-sm text-blue-300">
                       {day.precipitation}% chance of rain
                     </div>
                   )}
@@ -622,8 +620,8 @@ absolute
         </div>
       </div>
     ) : (
-      <div className="text-center p-12 bg-white/20 backdrop-blur-md rounded-3xl shadow-xl">
-        <p className="text-2xl">Enter a city name to get started</p>
+      <div className="text-center p-8 xs:p-10 sm:p-12 bg-white/20 backdrop-blur-md rounded-2xl xs:rounded-3xl shadow-xl">
+        <p className="text-lg xs:text-xl sm:text-2xl">Enter a city name to get started</p>
       </div>
     )}
   </div>
@@ -631,18 +629,17 @@ absolute
   <Modal show={showModal} onClose={handleCloseModal}>
     {selectedDetail && (
       <div
-        className={`p-6 rounded-2xl ${
+        className={`p-4 xs:p-5 sm:p-6 rounded-xl xs:rounded-2xl ${
           darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
-        } shadow-2xl`}
+        } shadow-2xl max-w-xs xs:max-w-sm mx-auto`}
       >
-        <h3 className="text-xl font-semibold mb-4">{selectedDetail.label}</h3>
-        <img src={selectedDetail.icon} alt="" className="w-12 h-12 mb-4" />
-        <p className="text-2xl font-bold">{selectedDetail.value}</p>
+        <h3 className="text-lg xs:text-xl font-semibold mb-3 xs:mb-4">{selectedDetail.label}</h3>
+        <img src={selectedDetail.icon} alt="" className="w-10 h-10 xs:w-12 xs:h-12 mb-3 xs:mb-4" />
+        <p className="text-xl xs:text-2xl font-bold">{selectedDetail.value}</p>
       </div>
     )}
   </Modal>
 </div>
-
   )
 }
 
