@@ -415,8 +415,8 @@ const search = async (city) => {
   )}
 
   <div className="max-w-7xl mx-auto px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 py-4 xs:py-6 sm:py-8 relative z-10">
-    <div className="flex flex-col xs:flex-row justify-between items-center mb-4 xs:mb-6 sm:mb-8 gap-4 xs:gap-0">
-      <div className="relative w-full max-w-xs xs:max-w-sm sm:max-w-md">
+    <div className="flex  flex-row xs:flex-row justify-between items-center mb-4 xs:mb-6 sm:mb-8 gap-4 xs:gap-0">
+      <div className="relative w-full h-full max-w-xs xs:max-w-sm sm:max-w-md">
         <input
           onKeyDown={handleKeyDown}
           onChange={handleSearchInputChange}
