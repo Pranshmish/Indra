@@ -46,23 +46,19 @@ function App() {
             }} />
           }
         />
-      
-        <Route
-          path="/home"
-          element={
-            isAuthenticated ? (
-              <>
-                <Home />
-                <button onClick={toggleChat} className="chat-toggle-btn">
-                  {showChat ? 'Close Chat' : 'Open Chat'}
-                </button>
-                {showChat && <ChatBot getWeatherSummary={getWeatherSummary} />}
-              </>
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
+      <Route
+  path="/home"
+  element={
+    isAuthenticated ? (
+      <>
+        <Home />
+        <ChatBot getWeatherSummary={getWeatherSummary} />
+      </>
+    ) : (
+      <Navigate to="/" />
+    )
+  }
+/>
         <Route
           path="/profile"
           element={isAuthenticated ? <Profile /> : <Navigate to="/" />}
