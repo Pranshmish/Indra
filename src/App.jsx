@@ -1,79 +1,71 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation
+} from "react-router-dom";
 import LoginPage from "./Pages/Login";
 import SignupPage from "./Pages/SignUp";
 import Home from "./Pages/Home";
 import Profile from "./Pages/Profile";
 import About from "./Pages/About";
-import ChatBot from './components/Chatbot';
 import News from "./components/News";
+import ChatBotWrapper from './components/ChatBotWrapper';
 import { getWeatherSummary } from './components/weatherAPI';
+
+function AppRoutes({ isAuthenticated, setIsAuthenticated }) {
+  const location = useLocation();
+
+  return (
+    <>
+    <Routes>
+  {/* Homepage accessible to everyone */}
+  <Route path="/" element={<Home isAuthenticated={isAuthenticated} />} />
+  <Route path="/signup" element={<SignupPage />} />
+  <Route
+    path="/login"
+    element={<LoginPage onLogin={() => setIsAuthenticated(true)} />}
+  />
+  {/* These routes require authentication */}
+  <Route
+    path="/home"
+    element={<Home isAuthenticated={isAuthenticated} />}
+  />
+  <Route
+    path="/profile"
+    element={isAuthenticated ? <Profile /> : <Navigate to="/login" />}
+  />
+  <Route
+    path="/news"
+    element={isAuthenticated ? <News /> : <Navigate to="/login" />}
+  />
+  <Route
+    path="/about"
+    element={isAuthenticated ? <About /> : <Navigate to="/login" />}
+  />
+</Routes>
+
+      {/* ✅ Hide chatbot on /login and /signup */}
+      {!["/login", "/signup"].includes(location.pathname) && (
+        <ChatBotWrapper isAuthenticated={isAuthenticated} />
+      )}
+    </>
+  );
+}
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("auth") === "true"
   );
-  const [showChat, setShowChat] = useState(false);
-
-  const toggleChat = () => {
-    setShowChat(prev => !prev);
-  };
 
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? (
-              <Navigate to="/home" />
-            ) : (
-              <LoginPage onLogin={() => setIsAuthenticated(true)} />
-            )
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <SignupPage />
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <LoginPage onLogin={() => {
-              console.log("User successfully logged in");
-            }} />
-          }
-        />
-      <Route
-  path="/home"
-  element={
-    isAuthenticated ? (
-      <>
-        <Home />
-        <ChatBot getWeatherSummary={getWeatherSummary} />
-      </>
-    ) : (
-      <Navigate to="/" />
-    )
-  }
-/>
-        <Route
-          path="/profile"
-          element={isAuthenticated ? <Profile /> : <Navigate to="/" />}
-        />
-          <Route
-          path="/news"
-          element={isAuthenticated ? <News /> : <Navigate to="/" />} 
-          />
-
-
-        <Route
-          path="/about"
-          element={isAuthenticated ? <About /> : <Navigate to="/" />} // ✅ Protect the route
-        />
-      </Routes>
+      <AppRoutes
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
+      />
     </Router>
   );
 }
