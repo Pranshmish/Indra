@@ -21,14 +21,14 @@ function AppRoutes({ isAuthenticated, setIsAuthenticated }) {
   return (
     <>
     <Routes>
-  {/* Homepage accessible to everyone */}
+
   <Route path="/" element={<Home isAuthenticated={isAuthenticated} />} />
   <Route path="/signup" element={<SignupPage />} />
   <Route
     path="/login"
     element={<LoginPage onLogin={() => setIsAuthenticated(true)} />}
   />
-  {/* These routes require authentication */}
+  
   <Route
     path="/home"
     element={<Home isAuthenticated={isAuthenticated} />}
@@ -47,7 +47,7 @@ function AppRoutes({ isAuthenticated, setIsAuthenticated }) {
   />
 </Routes>
 
-      {/* ✅ Hide chatbot on /login and /signup */}
+     
       {!["/login", "/signup"].includes(location.pathname) && (
         <ChatBotWrapper isAuthenticated={isAuthenticated} />
       )}

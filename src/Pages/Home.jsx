@@ -98,16 +98,15 @@ const Home = ({ isAuthenticated = false, onLogout }) => {
   const handleLogout = () => {
     setSidebarOpen(false);
     
-    // Clear any added cities when logging out (optional)
     setCityTabs([{ name: "Current Location", value: "current" }]);
     setSelectedCity("current");
     
-    // Call the logout function to update authentication state
+    
     if (onLogout) {
       onLogout();
     }
     
-    // Navigate to login page
+  
     navigate("/login");
   };
 
@@ -116,7 +115,7 @@ const Home = ({ isAuthenticated = false, onLogout }) => {
     navigate("/login");
   };
 
-  // Close login modal when user gets authenticated
+
   useEffect(() => {
     if (isAuthenticated && showLoginModal) {
       setShowLoginModal(false);
@@ -175,7 +174,7 @@ const Home = ({ isAuthenticated = false, onLogout }) => {
                     )}
                   </h3>
 
-                  {/* Always show Current Location */}
+                  
                   <button
                     key="current"
                     className={`w-full p-3 mb-2 rounded-lg text-left transition-all duration-300 flex items-center gap-3 ${selectedCity === "current"
@@ -190,7 +189,7 @@ const Home = ({ isAuthenticated = false, onLogout }) => {
                     <FaMapMarkerAlt /> Current Location
                   </button>
 
-                  {/* Show/Hide other cities based on toggle */}
+                  
                   <AnimatePresence>
                     {showAddedCities &&
                       cityTabs
@@ -233,7 +232,7 @@ const Home = ({ isAuthenticated = false, onLogout }) => {
                         ))}
                   </AnimatePresence>
 
-                  {/* Add City Form */}
+               
                   <form onSubmit={addCityTab} className="mt-6">
                     <div className="relative">
                       <input
@@ -255,7 +254,7 @@ const Home = ({ isAuthenticated = false, onLogout }) => {
                 </div>
               </div>
 
-              {/* Bottom Expandable Menu (Always visible) */}
+             
               <div className="mt-6">
                 <button
                   onClick={() => setMenuExpanded((prev) => !prev)}
@@ -334,7 +333,6 @@ const Home = ({ isAuthenticated = false, onLogout }) => {
             <Weather city={selectedCity} />
           </div>
 
-          {/* Login Modal */}
           <AnimatePresence>
             {showLoginModal && (
               <motion.div

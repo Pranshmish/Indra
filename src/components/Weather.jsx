@@ -185,32 +185,32 @@ const Weather = ({ city }) => {
   const weatherCodeIcons = {
   0: sunny,            
   1: sunny,            
-  2: cloudy,           // Partly cloudy
+  2: cloudy,           
   3: cloudy,           
-  45: cloudy,          // Fog
-  48: cloudy,          // Depositing fog
-  51: drizzle,         // Light drizzle
-  53: drizzle,         // Moderate drizzle
-  55: drizzle,         // Dense drizzle
-  56: drizzle,         // Light freezing drizzle
-  57: drizzle,         // Dense freezing drizzle
-  61: rainy,           // Slight rain
-  63: rainy,           // Moderate rain
-  65: rainy,           // Heavy rain
-  66: rainy,           // Light freezing rain
-  67: rainy,           // Heavy freezing rain
-  71: snowflake,       // Slight snowfall
-  73: snowflake,       // Moderate snowfall
-  75: snowflake,       // Heavy snowfall
-  77: snowflake,       // Snow grains
-  80: rainy,           // Rain showers (slight)
-  81: rainy,           // Rain showers (moderate)
-  82: rainy,           // Rain showers (violent)
-  85: snowflake,       // Snow showers (slight)
-  86: snowflake,       // Snow showers (heavy)
-  95: storm,           // Thunderstorm
-  96: storm,           // Thunderstorm + slight hail
-  99: storm            // Thunderstorm + heavy hail
+  45: cloudy,          
+  48: cloudy,          
+  51: drizzle,         
+  53: drizzle,        
+  55: drizzle,         
+  56: drizzle,        
+  57: drizzle,         
+  61: rainy,           
+  63: rainy,           
+  65: rainy,           
+  66: rainy,          
+  67: rainy,           
+  71: snowflake,       
+  73: snowflake,      
+  75: snowflake,       
+  77: snowflake,       
+  80: rainy,           
+  81: rainy,          
+  82: rainy,           
+  85: snowflake,       
+  86: snowflake,       
+  95: storm,          
+  96: storm,           
+  99: storm           
 };
 
 const rainyCodes = [ 61, 63, 65, 66, 67, 80, 81, 82,95,96,];
